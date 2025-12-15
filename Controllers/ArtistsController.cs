@@ -8,11 +8,12 @@ namespace Notesbin.Controllers;
 [Route("[controller]")]
 public class ArtistsController : ControllerBase
 {
+    //Nice and clean API controller for artists
     private readonly AppDbContext _context;
 
     public ArtistsController(AppDbContext context) => _context = context;
 
-    // POST /Artists
+    //Straightforward POST action really clean
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] string name)
     {

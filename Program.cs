@@ -4,7 +4,11 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.AspNetCore.Authorization;
 
-namespace TrackListApp{
+//Overall really cool application and expansion upon the original console app
+//Looks really solid and well structured
+
+namespace TrackListApp
+{
     public class Program
     {
         public static void Main(string[] args)

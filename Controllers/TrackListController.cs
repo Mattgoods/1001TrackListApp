@@ -16,6 +16,8 @@ public class TrackListController : ControllerBase
         _context = context;
     }
 
+    //Nice use of the EF Core sets for getting tracklists
+
     // GET: /TrackList/Sets
     [HttpGet("sets")]
     public async Task<IActionResult> Sets()
