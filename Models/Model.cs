@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+
+//Consider splitting configurations into separate files for even cleaner organization
 namespace _1001;
 
 // Songs table
