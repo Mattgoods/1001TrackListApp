@@ -80,4 +80,7 @@ public class AppDbContext(string dbName = "1001") : DbContext
             .HasForeignKey<SetAnalytics>(sa => sa.DjSetId)
             .OnDelete(DeleteBehavior.Cascade);
     }
+
 }
+// Great display of relationships that display in the UI
+// very intuitively.
