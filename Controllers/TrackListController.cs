@@ -16,6 +16,9 @@ public class TrackListController : ControllerBase
         _context = context;
     }
 
+    //Seamless use of await and async throughout for consistant and reliable reload handling
+
+
     // GET: /TrackList/Sets
     [HttpGet("sets")]
     public async Task<IActionResult> Sets()
@@ -44,6 +47,8 @@ public class TrackListController : ControllerBase
     }
 
     // GET: /TrackList/Sets/{id}
+
+    // Great flow and structure of these controllers! Could be helpful to use a helper method for shared logic (ex. include statements) 
     [HttpGet("sets/{id}")]
     public async Task<IActionResult> Sets(int id)
     {
@@ -406,6 +411,7 @@ public class TrackListController : ControllerBase
     }
 
 }
+    //Adding a search endpoint or filtering/sorting queries could be a cool feature for users 
 
 public class AddSetRequest
 {
