@@ -145,6 +145,51 @@ public class SetsController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+    // GET: Sets/Delete/5
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var set = await _context.DjSets
+            .Include(s => s.Artist)
+            .Include(s => s.Venue)
+            .Include(s => s.SetAnalytics)
+            .FirstOrDefaultAsync(m => m.DjSetId == id);
+
+        if (set == null) return NotFound();
+
+        return View(set);
+    }
+
+    // POST: Sets/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var set = await _context.DjSets
+            .Include(s => s.SetSongs)
+            .Include(s => s.SetAnalytics)
+            .FirstOrDefaultAsync(m => m.DjSetId == id);
+
+        if (set != null)
+        {
+            // Remove related SetSongs
+            _context.SetSongs.RemoveRange(set.SetSongs);
+            
+            // Remove related SetAnalytics
+            if (set.SetAnalytics != null)
+            {
+                _context.SetAnalytics.Remove(set.SetAnalytics);
+            }
+            
+            // Remove the set itself
+            _context.DjSets.Remove(set);
+            await _context.SaveChangesAsync();
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
 }
 
 public class CreateSetViewModel
