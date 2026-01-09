@@ -13,7 +13,7 @@ public class SetsController : Controller
         _context = context;
     }
 
-    // GET: Sets
+    //Can clearly see all of the sets. Maybe add pagination for large datasets
     public async Task<IActionResult> Index()
     {
         var sets = await _context.DjSets
@@ -25,7 +25,6 @@ public class SetsController : Controller
         return View(sets);
     }
 
-    // GET: Sets/Details/5
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null) return NotFound();
@@ -45,18 +44,18 @@ public class SetsController : Controller
         return View(set);
     }
 
-    // GET: Sets/Create
     public IActionResult Create()
     {
         return View();
     }
 
-    // POST: Sets/Create
+    // Well-organized POST flow creating artist, venue, set, and analytics; consider wrapping this in a transaction to ensure atomicity.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateSetViewModel model)
     {
         // 1. Handle Artist
+        //Maybe add checks that could avoid near-duplicates
         var artist = await _context.Artists.FirstOrDefaultAsync(a => a.DisplayName == model.ArtistName);
         if (artist == null)
         {
@@ -86,6 +85,7 @@ public class SetsController : Controller
         await _context.SaveChangesAsync();
 
         // 4. Analytics
+        //Nice touch to capture tickets sold, more metrics like attendance could be cool
         var analytics = new SetAnalytics
         {
             DjSetId = djSet.DjSetId,
@@ -93,7 +93,7 @@ public class SetsController : Controller
         };
         _context.SetAnalytics.Add(analytics);
 
-        // 5. Tracklist
+        // 5. Tracklist 
         if (model.Tracklist != null)
         {
             foreach (var entry in model.Tracklist)
@@ -109,7 +109,6 @@ public class SetsController : Controller
                     await _context.SaveChangesAsync();
                 }
 
-                // Handle Song Artist (if provided)
                 if (!string.IsNullOrWhiteSpace(entry.ArtistName))
                 {
                     var songArtist = await _context.Artists.FirstOrDefaultAsync(a => a.DisplayName == entry.ArtistName);
@@ -120,7 +119,6 @@ public class SetsController : Controller
                         await _context.SaveChangesAsync();
                     }
 
-                    // Link Song and Artist if not already linked
                     var existingLink = await _context.SongArtists.FindAsync(song.SongId, songArtist.ArtistId);
                     if (existingLink == null)
                     {
@@ -133,7 +131,6 @@ public class SetsController : Controller
                     }
                 }
 
-                // Link Song to Set
                 _context.SetSongs.Add(new SetSong
                 {
                     DjSetId = djSet.DjSetId,
