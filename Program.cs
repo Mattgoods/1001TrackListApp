@@ -1,9 +1,5 @@
 using _1001;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Net.Http.Headers;
-using Microsoft.AspNetCore.Routing.Matching;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.FileProviders;
 
 namespace TrackListApp{
     public class Program
@@ -22,41 +18,33 @@ namespace TrackListApp{
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(connectionString));
 
-            builder.Services.AddControllersWithViews()
-                .AddRazorOptions(options =>
-                {
-                    // Configure view discovery to look in Frontend/Views
-                    options.ViewLocationFormats.Clear();
-                    options.ViewLocationFormats.Add("../Frontend/Views/{1}/{0}.cshtml");
-                    options.ViewLocationFormats.Add("../Frontend/Views/Shared/{0}.cshtml");
-                });
+            builder.Services.AddControllersWithViews();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // CORS: honor configured allowed origins; fall back to allow-all for testing
+            var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
             builder.Services.AddCors(options =>
             {
-                options.AddDefaultPolicy(
-                    policy =>
+                options.AddDefaultPolicy(policy =>
+                {
+                    if (allowedOrigins is { Length: > 0 })
+                    {
+                        policy.WithOrigins(allowedOrigins)
+                              .AllowAnyMethod()
+                              .AllowAnyHeader()
+                              .AllowCredentials();
+                    }
+                    else
                     {
                         policy.AllowAnyOrigin()
-                            .AllowAnyMethod()
-                            .AllowAnyHeader();
-                    });
+                              .AllowAnyMethod()
+                              .AllowAnyHeader();
+                    }
+                });
             });
 
             var app = builder.Build();
-            
-            // Configure static file serving from Frontend/wwwroot
-            var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Frontend", "wwwroot");
-            if (!Directory.Exists(wwwrootPath))
-            {
-                wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-            }
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(wwwrootPath),
-                RequestPath = ""
-            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -67,6 +55,7 @@ namespace TrackListApp{
 
             // Use HTTPS redirect for production (App Services expects this)
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRouting();
             app.UseCors();
             app.UseAuthorization();

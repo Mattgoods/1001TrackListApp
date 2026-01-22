@@ -31,10 +31,7 @@
                         <span class="badge bg-secondary">
                             <i class="bi bi-ticket-perforated"></i> @(item.SetAnalytics?.TicketsSold?.ToString("N0") ?? "0") Sold
                         </span>
-                        <div>
-                            <a asp-action="Details" asp-route-id="@item.DjSetId" class="btn btn-sm btn-outline-primary">View Tracklist</a>
-                            <a asp-action="Delete" asp-route-id="@item.DjSetId" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
-                        </div>
+                        <a asp-action="Details" asp-route-id="@item.DjSetId" class="btn btn-sm btn-outline-primary">View Tracklist</a>
                     </div>
                 </div>
             </div>
