@@ -38,7 +38,9 @@ namespace TrackListApp{
                 options.AddDefaultPolicy(
                     policy =>
                     {
-                        policy.AllowAnyOrigin();
+                        policy.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
                     });
             });
 
@@ -66,8 +68,8 @@ namespace TrackListApp{
             // Use HTTPS redirect for production (App Services expects this)
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseAuthorization();
             app.UseCors();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
