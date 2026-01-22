@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.FileProviders;
 
 namespace TrackListApp{
     public class Program
@@ -21,11 +22,30 @@ namespace TrackListApp{
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(connectionString));
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews()
+                .AddRazorOptions(options =>
+                {
+                    // Configure view discovery to look in Frontend/Views
+                    options.ViewLocationFormats.Clear();
+                    options.ViewLocationFormats.Add("../Frontend/Views/{1}/{0}.cshtml");
+                    options.ViewLocationFormats.Add("../Frontend/Views/Shared/{0}.cshtml");
+                });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+            
+            // Configure static file serving from Frontend/wwwroot
+            var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "Frontend", "wwwroot");
+            if (!Directory.Exists(wwwrootPath))
+            {
+                wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(wwwrootPath),
+                RequestPath = ""
+            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -36,7 +56,6 @@ namespace TrackListApp{
 
             // Use HTTPS redirect for production (App Services expects this)
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
 
