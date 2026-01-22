@@ -33,6 +33,15 @@ namespace TrackListApp{
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin();
+                    });
+            });
+
             var app = builder.Build();
             
             // Configure static file serving from Frontend/wwwroot
@@ -58,6 +67,7 @@ namespace TrackListApp{
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseCors();
 
             app.MapControllerRoute(
                 name: "default",
