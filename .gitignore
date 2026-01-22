@@ -8,12 +8,6 @@ publish/
 artifacts/
 
 ########################
-# Separate repos
-########################
-Frontend/
-Backend/
-
-########################
 # Visual Studio / VS Code
 ########################
 .vscode/
