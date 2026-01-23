@@ -1,7 +1,11 @@
 using _1001;
 using Microsoft.EntityFrameworkCore;
 
-namespace TrackListApp{
+//Overall really cool application and expansion upon the original console app
+//Looks really solid and well structured
+
+namespace TrackListApp
+{
     public class Program
     {
         public static void Main(string[] args)

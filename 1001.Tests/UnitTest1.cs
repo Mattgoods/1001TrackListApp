@@ -3,6 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Notesbin.Controllers;
 using _1001;
 
+//Peer Review:
+// Clear and well-structured test classes
+// Good separation of Arrange/Act/Assert patterns
+// Naming conventions are consistent and readable
+
 namespace _1001.Tests;
 
 /// <summary>
@@ -13,6 +18,8 @@ public class BackendTests : IDisposable
     private readonly AppDbContext _context;
     private readonly SetsController _controller;
 
+    //Peer Review:
+    //good job using a in memory database for each test
     public BackendTests()
     {
         // Create an in-memory database for testing
@@ -70,6 +77,8 @@ public class BackendTests : IDisposable
         _context.SaveChanges();
     }
 
+    //Peer Review:
+    // consider attaching navigation properties to make sure relationships are the same
     /// <summary>
     /// Backend Test 1: Verify that SetsController Index returns all DJ sets with proper data
     /// </summary>
