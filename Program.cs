@@ -1,8 +1,5 @@
 using _1001;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Net.Http.Headers;
-using Microsoft.AspNetCore.Routing.Matching;
-using Microsoft.AspNetCore.Authorization;
 
 //Overall really cool application and expansion upon the original console app
 //Looks really solid and well structured
@@ -17,12 +14,39 @@ namespace TrackListApp
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             var builder = WebApplication.CreateBuilder(args);
+            
             // Add services to the container.
-            builder.Services.AddDbContext<AppDbContext>();
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseNpgsql(connectionString));
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            // CORS: honor configured allowed origins; fall back to allow-all for testing
+            var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    if (allowedOrigins is { Length: > 0 })
+                    {
+                        policy.WithOrigins(allowedOrigins)
+                              .AllowAnyMethod()
+                              .AllowAnyHeader()
+                              .AllowCredentials();
+                    }
+                    else
+                    {
+                        policy.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              .AllowAnyHeader();
+                    }
+                });
+            });
 
             var app = builder.Build();
 
@@ -33,8 +57,11 @@ namespace TrackListApp
                 app.UseSwaggerUI();
             }
 
+            // Use HTTPS redirect for production (App Services expects this)
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseCors();
             app.UseAuthorization();
 
             app.MapControllerRoute(

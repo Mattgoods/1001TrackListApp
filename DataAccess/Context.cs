@@ -2,10 +2,11 @@
 
 namespace _1001;
 
-public class AppDbContext(string dbName = "1001") : DbContext
+public class AppDbContext : DbContext
 {
-    private readonly string _connectionHost = "localhost";
-    private readonly string _connectionDbName = dbName;
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    {
+    }
 
     // DbSet properties for all tables
     public DbSet<Song> Songs { get; set; }
@@ -16,10 +17,9 @@ public class AppDbContext(string dbName = "1001") : DbContext
     public DbSet<SetAnalytics> SetAnalytics { get; set; }
     public DbSet<Venue> Venues { get; set; }
 
-    // Tell context how to connect to the database
+    // Configuration is now handled in Program.cs via dependency injection
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql($"Host={_connectionHost};Database={_connectionDbName}");
     }
 
     // Configure composite keys and relationships
