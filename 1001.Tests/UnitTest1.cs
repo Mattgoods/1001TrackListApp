@@ -5,6 +5,8 @@ using _1001;
 
 namespace _1001.Tests;
 
+//Tests look good, I like the seperation of logic and where everything is setup
+
 /// <summary>
 /// Backend Unit Tests for 1001 TrackList Application
 /// </summary>
@@ -53,6 +55,7 @@ public class BackendTests : IDisposable
             DurationMinutes = 180,
             VenueId = 1
         };
+        //Space Ibiza is a great test here. Looks good
 
         var analytics = new SetAnalytics
         {

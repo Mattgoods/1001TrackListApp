@@ -12,6 +12,9 @@ namespace _1001.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+
+            //The use of Npgsql value generation here is good, I like it to switch to using hosted postgresql
+
             migrationBuilder.CreateTable(
                 name: "artists",
                 columns: table => new

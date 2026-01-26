@@ -62,4 +62,6 @@ jobs:
           app-name: '1001tracklist'
           slot-name: 'Production'
           package: .
+          #Might not be a bad idea to deploy this to a seperate deployment slot where you could verify testing
+          #and proper functionality before pushing to production. Something like UAT
           
