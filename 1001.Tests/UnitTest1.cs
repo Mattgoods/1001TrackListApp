@@ -5,6 +5,7 @@ using _1001;
 
 namespace _1001.Tests;
 
+// I think the seperation of backend and frontend tests makes sense here.
 /// <summary>
 /// Backend Unit Tests for 1001 TrackList Application
 /// </summary>
@@ -27,6 +28,7 @@ public class BackendTests : IDisposable
         SeedTestData();
     }
 
+    // Maybe we can expand this later with more complex data seeding if needed.
     private void SeedTestData()
     {
         var artist = new Artist
@@ -70,6 +72,7 @@ public class BackendTests : IDisposable
         _context.SaveChanges();
     }
 
+    // These tests are good starting points. We can expand them with more edge cases and scenarios later.
     /// <summary>
     /// Backend Test 1: Verify that SetsController Index returns all DJ sets with proper data
     /// </summary>
