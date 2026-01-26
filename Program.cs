@@ -14,6 +14,9 @@ namespace TrackListApp{
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+            //I like how this is done, you could use a try catch block but this is good to seperate and 
+            //identify a specific error regarding the connetion string.
             
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(connectionString));
@@ -70,4 +73,4 @@ namespace TrackListApp{
         }
     }
 }
-        
+// I like the simplicity of this file, and good job to include comments throughout to explain where things are happening.
